@@ -46,7 +46,7 @@ public class IntervalAction {
 	 * 
 	 * @param request
 	 * @param response
-	 * @return Message ËùÓĞµÄ²âÊÔµã(CST_ID,CST_NAME)
+	 * @return Message ï¿½ï¿½ï¿½ĞµÄ²ï¿½ï¿½Ôµï¿½(CST_ID,CST_NAME)
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/getAllCstId/", method = RequestMethod.POST)
@@ -63,7 +63,7 @@ public class IntervalAction {
 	 * 
 	 * @param request
 	 * @param response
-	 * @return Message ËùÓĞµÄ²âÊÔµã(CST_ID,CST_NAME,timeInterval)
+	 * @return Message ï¿½ï¿½ï¿½ĞµÄ²ï¿½ï¿½Ôµï¿½(CST_ID,CST_NAME,timeInterval)
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/getAllById/", method = RequestMethod.POST)
@@ -72,18 +72,18 @@ public class IntervalAction {
 		
 		String cst_id = (String) map.get("cst_id");
 		Long timeInterval=Long.valueOf(String.valueOf(map.get("timeInterval")))*60000;
-		//»ñÈ¡¸ÃÕ¾µã×îĞ¡µÄÊ±¼ä
+		//ï¿½ï¿½È¡ï¿½ï¿½Õ¾ï¿½ï¿½ï¿½ï¿½Ğ¡ï¿½ï¿½Ê±ï¿½ï¿½
 		Long mdi_ts = intervalService.getMinTimeById(cst_id);
 		System.out.println(mdi_ts);
 		Map<String, Object> parmMap=new HashMap<String, Object>();
 		parmMap.put("cst_id", cst_id);
 		parmMap.put("mdi_ts", mdi_ts);
 		parmMap.put("timeInterval", timeInterval);
-		//»ñÈ¡¸ÃÕ¾µã´Ó¿ªÊ¼µ½×îºóËùÓĞµÄÊı¾İ(cst_id,cst_name,mdi_ts,now,bef)
+		//ï¿½ï¿½È¡ï¿½ï¿½Õ¾ï¿½ï¿½Ó¿ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ğµï¿½ï¿½ï¿½ï¿½ï¿½(cst_id,cst_name,mdi_ts,now,bef)
 		List<Map<String, Object>> result =intervalService.getAllById(parmMap);	
 		try {
 			M5P classifier= cartModel(createInstances(result));
-			//Ô¤²âÎ´À´Ò»Ìì
+			//Ô¤ï¿½ï¿½Î´ï¿½ï¿½Ò»ï¿½ï¿½
 			Date date= new Date();
 			List<Map<String, Object>> flist=createForcastDate(new Date(date.getYear(),date.getMonth(),date.getDate()), 1, timeInterval);
 			Instances test= createInstances(flist);
@@ -118,8 +118,8 @@ public class IntervalAction {
 	}
 	
 	public Instances createInstances(List<Map<String, Object>> list){
-		//ÉùÃ÷attributes
 		ArrayList<Attribute> atts = new ArrayList<Attribute>();
+		//M,D,W,IS_HOLIDAYS,R1,R2,R3,R7,A3,R
 		Attribute mdi_ts = new Attribute("MDI_TS");
 		Attribute now = new Attribute("NOW");
 		Attribute bef = new Attribute("BEF");
@@ -174,36 +174,36 @@ public class IntervalAction {
 	  Save instances at the nodes in
 	  the tree (for visualization purposes)
 	  -s 
-		ÏòÁ¿»úµÄÖÖÀà£¬°üÀ¨·ÖÀà£¨C-SVC,nu-SVC£©£¬»Ø¹é£¨epsilon-SVR,nu-SVR£©ÒÔ¼°·Ö²¼¹À¼Æ£¨one-class SVM£©£¬c-svcÖĞcµÄ·¶Î§ÊÇ1µ½ÕıÎŞÇî 
-		nu-svcÖĞnuµÄ·¶Î§ÊÇ0µ½1£¬»¹ÓĞnuÊÇ´í·ÖÑù±¾ËùÕ¼±ÈÀıµÄÉÏ½ç£¬Ö§³ÖÏòÁ¿ËùÕ¼±ÈÁĞµÄÏÂ½ç¡£ 
+		ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½à£¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½à£¨C-SVC,nu-SVCï¿½ï¿½ï¿½ï¿½ï¿½Ø¹é£¨epsilon-SVR,nu-SVRï¿½ï¿½ï¿½Ô¼ï¿½ï¿½Ö²ï¿½ï¿½ï¿½ï¿½Æ£ï¿½one-class SVMï¿½ï¿½ï¿½ï¿½c-svcï¿½ï¿½cï¿½Ä·ï¿½Î§ï¿½ï¿½1ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 
+		nu-svcï¿½ï¿½nuï¿½Ä·ï¿½Î§ï¿½ï¿½0ï¿½ï¿½1ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½nuï¿½Ç´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Õ¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï½ç£¬Ö§ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Õ¼ï¿½ï¿½ï¿½Ğµï¿½ï¿½Â½ç¡£ 
 		-k 
-		ºËº¯ÊıÀàĞÍ£¬¶àÏîÊ½¡¢ÏßĞÔ¡¢¸ßË¹¡¢tanhº¯Êı¡£ 
+		ï¿½Ëºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í£ï¿½ï¿½ï¿½ï¿½ï¿½Ê½ï¿½ï¿½ï¿½ï¿½ï¿½Ô¡ï¿½ï¿½ï¿½Ë¹ï¿½ï¿½tanhï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 
 		-d 
-		degree£ººËº¯ÊıÖĞµÄdegreeÉèÖÃ(Õë¶Ô¶àÏîÊ½ºËº¯Êı)(Ä¬ÈÏ3) 
+		degreeï¿½ï¿½ï¿½Ëºï¿½ï¿½ï¿½ï¿½Ğµï¿½degreeï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½Ô¶ï¿½ï¿½ï¿½Ê½ï¿½Ëºï¿½ï¿½ï¿½)(Ä¬ï¿½ï¿½3) 
 		-g 
-		ºËº¯ÊıÖĞµÄgammaº¯ÊıÉèÖÃ(Õë¶Ô¶àÏîÊ½/rbf/sigmoidºËº¯Êı)(Ä¬ÈÏ1/ k) 
+		ï¿½Ëºï¿½ï¿½ï¿½ï¿½Ğµï¿½gammaï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½Ô¶ï¿½ï¿½ï¿½Ê½/rbf/sigmoidï¿½Ëºï¿½ï¿½ï¿½)(Ä¬ï¿½ï¿½1/ k) 
 		-r 
-		coef0£ººËº¯ÊıÖĞµÄcoef0ÉèÖÃ(Õë¶Ô¶àÏîÊ½/sigmoidºËº¯Êı)((Ä¬ÈÏ0) 
+		coef0ï¿½ï¿½ï¿½Ëºï¿½ï¿½ï¿½ï¿½Ğµï¿½coef0ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½Ô¶ï¿½ï¿½ï¿½Ê½/sigmoidï¿½Ëºï¿½ï¿½ï¿½)((Ä¬ï¿½ï¿½0) 
 		-c 
-		cost£ºÉèÖÃC-SVC£¬e -SVRºÍv-SVRµÄ²ÎÊı(ËğÊ§º¯Êı)(Ä¬ÈÏ1) 
+		costï¿½ï¿½ï¿½ï¿½ï¿½ï¿½C-SVCï¿½ï¿½e -SVRï¿½ï¿½v-SVRï¿½Ä²ï¿½ï¿½ï¿½(ï¿½ï¿½Ê§ï¿½ï¿½ï¿½ï¿½)(Ä¬ï¿½ï¿½1) 
 		-n 
-		nu£ºÉèÖÃv-SVC£¬Ò»ÀàSVMºÍv- SVRµÄ²ÎÊı(Ä¬ÈÏ0.5) 
+		nuï¿½ï¿½ï¿½ï¿½ï¿½ï¿½v-SVCï¿½ï¿½Ò»ï¿½ï¿½SVMï¿½ï¿½v- SVRï¿½Ä²ï¿½ï¿½ï¿½(Ä¬ï¿½ï¿½0.5) 
 		-Z 
-		¶ÔÊäÈëµÄÊı¾İ½øĞĞnormalization£¬Ä¬ÈÏÊÇ·Ç¿ªÆô 
+		ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½İ½ï¿½ï¿½ï¿½normalizationï¿½ï¿½Ä¬ï¿½ï¿½ï¿½Ç·Ç¿ï¿½ï¿½ï¿½ 
 		-J 
-		Êı¾İÈ«²¿¶¼ÊÇnumricµÄÊ±ºò£¬½øĞĞ¶ş½øÖÆ±àÂë 
+		ï¿½ï¿½ï¿½ï¿½È«ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½numricï¿½ï¿½Ê±ï¿½ò£¬½ï¿½ï¿½Ğ¶ï¿½ï¿½ï¿½ï¿½Æ±ï¿½ï¿½ï¿½ 
 		-V 
-		È±Ê§ÖµÊÇ·ñ´¦Àí£¬Ä¬ÈÏÊÇ¿ªÆô 
+		È±Ê§Öµï¿½Ç·ï¿½ï¿½ï¿½Ä¬ï¿½ï¿½ï¿½Ç¿ï¿½ï¿½ï¿½ 
 		-p 
-		p£ºÉèÖÃe -SVR ÖĞËğÊ§º¯ÊıpµÄÖµ(Ä¬ÈÏ0.1) 
+		pï¿½ï¿½ï¿½ï¿½ï¿½ï¿½e -SVR ï¿½ï¿½ï¿½ï¿½Ê§ï¿½ï¿½ï¿½ï¿½pï¿½ï¿½Öµ(Ä¬ï¿½ï¿½0.1) 
 		-m 
-		cachesize£ºÉèÖÃcacheÄÚ´æ´óĞ¡£¬ÒÔMBÎªµ¥Î»(Ä¬ÈÏ40) 
+		cachesizeï¿½ï¿½ï¿½ï¿½ï¿½ï¿½cacheï¿½Ú´ï¿½ï¿½Ğ¡ï¿½ï¿½ï¿½ï¿½MBÎªï¿½ï¿½Î»(Ä¬ï¿½ï¿½40) 
 		-e 
-		eps£ºÉèÖÃÔÊĞíµÄÖÕÖ¹ÅĞ¾İ(Ä¬ÈÏ0.001) 
+		epsï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¹ï¿½Ğ¾ï¿½(Ä¬ï¿½ï¿½0.001) 
 		-h 
-		shrinking£ºÊÇ·ñÊ¹ÓÃÆô·¢Ê½£¬0»ò1(Ä¬ÈÏ1) 
+		shrinkingï¿½ï¿½ï¿½Ç·ï¿½Ê¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê½ï¿½ï¿½0ï¿½ï¿½1(Ä¬ï¿½ï¿½1) 
 		-wi 
-		weight£ºÉèÖÃµÚ¼¸ÀàµÄ²ÎÊıCÎªweight*C(C-SVCÖĞµÄC)(Ä¬ÈÏ1)
+		weightï¿½ï¿½ï¿½ï¿½ï¿½ÃµÚ¼ï¿½ï¿½ï¿½Ä²ï¿½ï¿½ï¿½CÎªweight*C(C-SVCï¿½Ğµï¿½C)(Ä¬ï¿½ï¿½1)
 	 * @param data
 	 * @throws Exception
 	 */

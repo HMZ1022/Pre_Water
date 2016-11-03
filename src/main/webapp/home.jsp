@@ -295,7 +295,7 @@ div.content_box {
 									<option value="3">测试点3</option>
 								</select>
 							</div>
-							<div class="col-xs-3"><input id="eve_model" class="btn btn-primary" type="button" value="模型评估"/></div>
+							<div class="col-xs-3"><input id="eve_model" class="btn btn-primary" type="button" value="模型评估" onclick="modelEvaluation()"/></div>
 						</div>
 					</form>	
 			  	</div>
@@ -388,4 +388,24 @@ div.content_box {
 			  contentType:"application/json"
 		});
 	}
+	
+	function modelEvaluation(){
+		$.ajax({
+			  type: 'POST',
+			  url: 'rest/system/modelEvaluation/modelEvalution/',
+			  data:JSON3.stringify({
+				  cst_id:"5698",
+				  beginDate:"2015-07-06 00:00:00",
+				  endDate:"2016-08-01 00:00:00",
+				  algorithm:"tree"
+				}),
+			  success: function(result){
+				  alert("sss");
+			  },
+			  dataType: "json",
+			  contentType:"application/json"
+		});
+	}
+	
+	
 </script>

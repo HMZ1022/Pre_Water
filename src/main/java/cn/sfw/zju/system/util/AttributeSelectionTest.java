@@ -37,7 +37,7 @@ public class AttributeSelectionTest {
 	    System.out.println();
 	    while (s.hasMoreElements())
 	        System.out.println(s.nextElement());
-	    //System.out.println(newData);  
+	    System.out.println(data.get(0));  
 	  }  
 	  
 	  protected static void useWrapperSubsetEval(Instances date) throws Exception{
