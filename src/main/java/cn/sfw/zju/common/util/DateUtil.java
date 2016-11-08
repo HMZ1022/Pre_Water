@@ -44,6 +44,15 @@ public class DateUtil {
 		System.out.println(time-1442678400000L);
 		System.out.println(convertLongToTime(1415875800000L));
 		System.out.println(resetDate(new Date(),10).toLocaleString());
+		Calendar c = Calendar.getInstance();
+		SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");  
+		try {
+			c.setTime(sdf1.parse(1993+"-"+2+"-"+3));
+		} catch (ParseException e) {
+			
+			e.printStackTrace();
+		}
+		System.out.println(sdf1.format(c.getTime()));
 	}
 	
 	

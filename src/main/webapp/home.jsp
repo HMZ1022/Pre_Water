@@ -268,11 +268,11 @@ div.content_box {
 						<div >
 							<div class="col-xs-3">
 								<label class="control-label">开始日期：</label>
-								<input id="e_startDate" class="form-control" type="text" onClick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:false})"/>
+								<input id="e_startDate" class="form-control" type="text" onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowClear:false})"/>
 							</div>
 							<div class="col-xs-3">
 								<label class="control-label">结束日期：</label>
-								<input id="e_endDate" class="form-control" type="text" onClick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:false})"/>
+								<input id="e_endDate" class="form-control" type="text" onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowClear:false})"/>
 							</div>
 							<div class="selectButton col-xs-3 form-group"><label for="timeInterval" class="control-label">时间间隔:</label>
 								<select id="e_timeInterval" class="form-control" style="width:200px;">
@@ -283,14 +283,14 @@ div.content_box {
 							</div>							
 							<div class="col-xs-3"><label for="algorithm" class="control-label">预测算法</label>
 								<select id="e_algorithm" class="form-control" style="width:200px;">
-									<option value="term_total" selected="selected">BP</option>
-									<option value="city">搜索树</option>
-									<option value="education">因子</option>
+									<option value="bp" selected="selected">BP</option>
+									<option value="tree">搜索树</option>
+									<option value="smoreg">因子</option>
 								</select>
 							</div>
 							<div class="col-xs-3"><label for="place" class="control-label">测试点</label>
 								<select id="e_place" class="form-control" style="width:200px;">
-									<option value="1" selected="selected">测试点1</option>
+									<option value="5698" selected="selected">test_options</option>
 									<option value="2">测试点2</option>
 									<option value="3">测试点3</option>
 								</select>
@@ -346,13 +346,13 @@ div.content_box {
 	$(document).ready(function() {
 		getAllCstId();
 	});
-	var tableDatas=[];
+	//var tableDatas=[];
 	var table;
 	initEcharts('chart');
 	initEcharts('c1');
 	initEcharts('c2');
 	initTable2('table');
-	initTable('t3');
+	//initTable('t3');
 	
 	function getAllCstId(){
 		$.ajax({
@@ -390,22 +390,99 @@ div.content_box {
 	}
 	
 	function modelEvaluation(){
+		var cst_id=$("#e_place").val();
+		var beginDate=$("#e_startDate").val();
+		var endDate=$("#e_endDate").val();
+		var timeInterval=$("#e_timeInterval").val();
+		var algorithm=$("#e_algorithm").val();
 		$.ajax({
 			  type: 'POST',
 			  url: 'rest/system/modelEvaluation/modelEvalution/',
 			  data:JSON3.stringify({
-				  cst_id:"5698",
-				  beginDate:"2015-07-06 00:00:00",
-				  endDate:"2016-08-01 00:00:00",
-				  algorithm:"tree"
+				  cst_id:cst_id,
+				  timeInterval:timeInterval,
+				  beginDate:"2015-07-06 00:00:00",//beginDate,
+				  endDate:"2016-09-07 00:00:00",//endDate,
+				  algorithm:algorithm//"smoreg"
 				}),
 			  success: function(result){
 				  alert("sss");
+				  var resultList=result.data;
+				  var tableDatas=[];
+				  for(var i=0;i<resultList.length;i++){
+						tableDatas[i]={
+								'id':resultList[i].id,
+								'name':resultList[i].name,
+								'time':resultList[i].time,
+								'actualValue':resultList[i].actualValue,
+								'predictValue1':resultList[i].predictValue,
+								'deviation1':resultList[i].deviation,
+								'preNUm2':0,
+								'dValue2':0,
+								'preNUm3':0,
+								'dValue3':0,
+						}
+					}
+				  initTable('t3',tableDatas,'tree');
 			  },
 			  dataType: "json",
 			  contentType:"application/json"
 		});
 	}
-	
+	function initTable(elem,tableDatas,method){
+		$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) { $($.fn.dataTable.tables(true)).DataTable().columns.adjust(); });
+		var tableDatas=tableDatas;
+		var lengthMenu;
+		if(elem=='t3'){
+			lengthMenu=[4]
+			buttons=[]
+		}else{
+			lengthMenu=[10];
+	        buttons= [ 'copy', 'csv', 'excel', 'pdf'];
+		}
+		table=$("#"+elem).DataTable({
+			/*dom: 'Bfrt<"pageclass"p><"infoclass"i>',*/
+			'dom': '<"float_left"f>r<"float_right"l>tip',
+			buttons:buttons,
+	        sScrollX: "100%",   //表格的宽度
+			scrollX:true,//设置滚动
+			scollY:true,//设置滚动
+			destroy: true,
+			retrieve:true,
+			ordering: true,
+			searching: true,//开启搜索
+	        info: true,//是否显示左下角信息
+	        bLengthChange: true, //改变每页显示数据数量
+	        autoWidth: true,//自动宽度
+			pagingType: "full",
+			orderFixed:true,//高亮排序的列
+			"lengthMenu": lengthMenu,
+			stripeClasses: [ 'strip1', 'strip2' ],
+			columns: [
+				{ title:"编号","data": "id" , "className": "dt-center"},
+				{ title:"测量名称","data": "name" , "className": "dt-center" },
+				{ title:"时间","data": "time" , "className": "dt-center" },
+				{ title:"用量","data": "actualValue" , "className": "dt-center" },
+				{ title:"预测用量","data": "predictValue1" , "className": "dt-center" },
+				{ title:"插化","data": "deviation1" , "className": "dt-center" },
+				{ title:"预测用量","data": "preNUm2" , "className": "dt-center" },
+				{ title:"插化","data": "dValue2" , "className": "dt-center" },
+				{ title:"预测用量","data": "preNUm3" , "className": "dt-center" },
+				{ title:"插化","data": "dValue3" , "className": "dt-center" },
+			],
+			data: tableDatas,
+			language: {
+				info: "显示第 _PAGE_ 页，一共 _PAGES_ 页",
+				emptyTable: "无数据",
+				zeroRecords:    "无匹配结果",
+				paginate: {
+					first:      "首页",
+					previous:   "上一页",
+					next:       "下一页",
+					last:       "尾页"
+				}
+			}		
+	    });
+	}
 	
 </script>

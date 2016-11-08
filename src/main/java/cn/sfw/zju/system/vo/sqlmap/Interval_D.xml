@@ -3,7 +3,7 @@
 <mapper namespace="cn.sfw.zju.system.dao.Interval_DDao">
 
 	<select id="getByCstIdAndTime" parameterType="map" resultType="hashmap">
-		SELECT M,D,W,IS_HOLIDAYS,R1,R2,R3,R7,A3,R FROM INTERVAL_D WHERE CST_ID=#{cst_id}
+		SELECT CST_ID,CST_NAME,CDATE,M,D,W,IS_HOLIDAYS,R1,R2,R3,R7,A3,R FROM INTERVAL_D WHERE CST_ID=#{cst_id}
 		<if test="beginDate!=null">
 			AND MDI_TS &gt; #{beginDate}
 		</if>

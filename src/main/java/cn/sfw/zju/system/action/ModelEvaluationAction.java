@@ -120,25 +120,40 @@ public class ModelEvaluationAction {
 			log.error("训练模型失败");
 		}
 		
+		//定义预测结果。
+		List<Map<String, Object>> resultList = new ArrayList<>();
+
 		//进行预测。
 		double sum=test.numInstances();
 		NumberFormat fmt = NumberFormat.getPercentInstance();  
-        fmt.setMaximumFractionDigits(6);//最多两位百分小数，如25.23%  
+        fmt.setMaximumFractionDigits(2);//最多两位百分小数，如25.23%  
         double sumt=0;
 		double num=0;
 		for(int i=0;i<sum;i++){
-			double t;
+			Map<String, Object>  resultMap= new HashMap<>();
+			resultMap.put("id",cst_id);
+			resultMap.put("name",cst_id);
+			resultMap.put("time", testList.get(i).get("CDATE"));
+			double predictValue;
+			double actualValue;
+			String deviation;
 			try {
-				t = classifier.classifyInstance(test.instance(i))-test.instance(i).classValue();
-				String s=fmt.format(t/test.instance(i).classValue());
-				System.out.println(test.instance(i).classValue()+":"+classifier.classifyInstance(test.instance(i))+":"+s);
-				sumt+=Math.abs(t);
+				predictValue=classifier.classifyInstance(test.instance(i));
+				actualValue=test.instance(i).classValue();
+				deviation=fmt.format((predictValue-actualValue)/actualValue);							
+				sumt+=Math.abs(predictValue-actualValue);
 				num+=test.instance(i).classValue();
+				resultMap.put("actualValue",actualValue);
+				resultMap.put("predictValue",predictValue);
+				resultMap.put("deviation",deviation);
 			} catch (Exception e) {
 				e.printStackTrace();
-			}	
+			}
+			resultList.add(resultMap);
 		}
-		System.out.println(fmt.format(sumt/num));  
+		System.out.println(fmt.format(sumt/num));
+		message.setData(resultList);
+		message.setCode("SUCCESS");
 		return message;
 	}
 	
