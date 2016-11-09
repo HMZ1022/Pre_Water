@@ -66,6 +66,9 @@ div.content_box {
 } */
 </style>
 <script src="extends/echarts.js"></script>
+<!--multiple-select-->
+<link rel="stylesheet" href="extends/multiple-select.css">
+<script src="extends/multiple-select.js"></script>
 <!-- datatables -->
 <link href="extends/datatables/media/css/jquery.dataTables.min.css" rel="stylesheet">
 <link href="extends/datatables/extensions/Buttons/css/buttons.dataTables.min.css" rel="stylesheet">
@@ -280,19 +283,19 @@ div.content_box {
 									<option value="1">1小时</option>
 									<option value="24">1天</option>
 								</select>
-							</div>							
-							<div class="col-xs-3"><label for="algorithm" class="control-label">预测算法</label>
-								<select id="e_algorithm" class="form-control" style="width:200px;">
-									<option value="bp" selected="selected">BP</option>
-									<option value="tree">搜索树</option>
-									<option value="smoreg">因子</option>
-								</select>
-							</div>
+							</div>	
 							<div class="col-xs-3"><label for="place" class="control-label">测试点</label>
 								<select id="e_place" class="form-control" style="width:200px;">
 									<option value="5698" selected="selected">test_options</option>
 									<option value="2">测试点2</option>
 									<option value="3">测试点3</option>
+								</select>
+							</div>						
+							<div class="col-xs-3"><label for="algorithm" class="control-label">预测算法</label>
+								<select id="e_algorithm" multiple="multiple" style="width:200px;">
+									<option value="bp" selected="selected">BP</option>
+									<option value="tree">搜索树</option>
+									<option value="smoreg">支持向量机回归</option>
 								</select>
 							</div>
 							<div class="col-xs-3"><input id="eve_model" class="btn btn-primary" type="button" value="模型评估" onclick="modelEvaluation()"/></div>
@@ -308,9 +311,9 @@ div.content_box {
 			                <th rowspan="2" >测量名称</th>
 			                <th rowspan="2">时间</th>
 			                <th rowspan="2">用量</th>
-			                <th colspan="2">模型1</th>
-			                <th colspan="2">模型2</th>
-			                <th colspan="2">模型3</th>
+			                <th colspan="2">决策树</th>
+			                <th colspan="2">支持向量机回归</th>
+			                <th colspan="2">神经网络</th>
 			            </tr>
 			            <tr>
 			                <th>预测用量</th>
@@ -345,14 +348,13 @@ div.content_box {
 <script>
 	$(document).ready(function() {
 		getAllCstId();
+		$('#e_algorithm').multipleSelect();
 	});
 	//var tableDatas=[];
 	var table;
 	initEcharts('chart');
-	initEcharts('c1');
-	initEcharts('c2');
 	initTable2('table');
-	//initTable('t3');
+	
 	
 	function getAllCstId(){
 		$.ajax({
@@ -364,7 +366,8 @@ div.content_box {
 				  for(var i=0;i<list.length;i++){
 					  optionstring += "<option value=\"" + list[i].CST_ID + "\" >" + list[i].CST_NAME + "</option>"; 
 				  }
-				  $("#place").html("<option value='请选择'>请选择...</option> "+optionstring); 
+				  $("#place").html("<option value='请选择'>请选择...</option> "+optionstring);
+				  $("#e_place").html("<option value='请选择'>请选择...</option> "+optionstring); 
 			  },
 			  dataType: "json",
 			  contentType:"application/json"
@@ -401,34 +404,84 @@ div.content_box {
 			  data:JSON3.stringify({
 				  cst_id:cst_id,
 				  timeInterval:timeInterval,
-				  beginDate:"2015-07-06 00:00:00",//beginDate,
-				  endDate:"2016-09-07 00:00:00",//endDate,
+				  beginDate:beginDate,//"2016-07-06 00:00:00",
+				  endDate:endDate,//"2016-09-07 00:00:00",
 				  algorithm:algorithm//"smoreg"
 				}),
 			  success: function(result){
-				  alert("sss");
+				 // alert("sss");
 				  var resultList=result.data;
+				  //加载table
 				  var tableDatas=[];
+				  var xData=[];
+				  var yData=[];
+				  var yData2=[];
+				  var actual=[];
+				  var treeData=[];
+				  var smoregData=[];
+				  var bpData=[];
+				  var treeDeviationData=[];
+				  var smoregDeviationData=[];
+				  var bpDeviationData=[];
 				  for(var i=0;i<resultList.length;i++){
 						tableDatas[i]={
 								'id':resultList[i].id,
 								'name':resultList[i].name,
 								'time':resultList[i].time,
 								'actualValue':resultList[i].actualValue,
-								'predictValue1':resultList[i].predictValue,
-								'deviation1':resultList[i].deviation,
-								'preNUm2':0,
-								'dValue2':0,
-								'preNUm3':0,
-								'dValue3':0,
-						}
+								'tree_predictValue':isNull(resultList[i].tree_predictValue),
+								'tree_deviation':isNull(resultList[i].tree_deviation),
+								'smoreg_predictValue':isNull(resultList[i].smoreg_predictValue),
+								'smoreg_deviation':isNull(resultList[i].smoreg_deviation),
+								'bp_predictValue':isNull(resultList[i].bp_predictValue),
+								'bp_deviation':isNull(resultList[i].bp_deviation),
+						};
+						//
+						xData[i]=resultList[i].time;
+						actual[i]=resultList[i].actualValue;
+						treeData[i]=resultList[i].tree_predictValue;
+						smoregData[i]=resultList[i].smoreg_predictValue;
+						bpData[i]=resultList[i].bp_predictValue;
+						//
+						treeDeviationData[i]=toPoint(resultList[i].tree_deviation);
+						smoregDeviationData[i]=toPoint(resultList[i].smoreg_deviation);
+						bpDeviationData[i]=toPoint(resultList[i].bp_deviation);
 					}
 				  initTable('t3',tableDatas,'tree');
+				  yData=[
+					  {name:'actual',type:'line',data:actual},
+					  {name:'treeData',type:'line',data:treeData},
+					  {name:'smoregData',type:'line',data:smoregData},
+					  {name:'bpData',type:'line',data:bpData}
+				  ];
+				  yData2=[
+					  {name:'treeData',type:'line',data:treeDeviationData},
+					  {name:'smoregData',type:'line',data:smoregDeviationData},
+					  {name:'bpData',type:'line',data:bpDeviationData}
+				  ];
+				  //加载chart1,chart2
+				  initEcharts('c1',xData,yData);
+				  initEcharts('c2',xData,yData2);
 			  },
 			  dataType: "json",
 			  contentType:"application/json"
 		});
 	}
+	function isNull(num){
+		if(num==null){
+			return 0;
+		}else{
+			return num;
+		}
+	}
+	function toPoint(percent){
+		if(percent=='0'||percent==0||percent==null){ return 0;}else{
+		    var str=percent.replace("%","");
+		    str= str/100;
+		    return str;
+		}		
+	}
+	
 	function initTable(elem,tableDatas,method){
 		$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) { $($.fn.dataTable.tables(true)).DataTable().columns.adjust(); });
 		var tableDatas=tableDatas;
@@ -463,12 +516,12 @@ div.content_box {
 				{ title:"测量名称","data": "name" , "className": "dt-center" },
 				{ title:"时间","data": "time" , "className": "dt-center" },
 				{ title:"用量","data": "actualValue" , "className": "dt-center" },
-				{ title:"预测用量","data": "predictValue1" , "className": "dt-center" },
-				{ title:"插化","data": "deviation1" , "className": "dt-center" },
-				{ title:"预测用量","data": "preNUm2" , "className": "dt-center" },
-				{ title:"插化","data": "dValue2" , "className": "dt-center" },
-				{ title:"预测用量","data": "preNUm3" , "className": "dt-center" },
-				{ title:"插化","data": "dValue3" , "className": "dt-center" },
+				{ title:"预测用量","data": "tree_predictValue" , "className": "dt-center" },
+				{ title:"插化","data": "tree_deviation" , "className": "dt-center" },
+				{ title:"预测用量","data": "smoreg_predictValue" , "className": "dt-center" },
+				{ title:"插化","data": "smoreg_deviation" , "className": "dt-center" },
+				{ title:"预测用量","data": "bp_predictValue" , "className": "dt-center" },
+				{ title:"插化","data": "bp_deviation" , "className": "dt-center" },
 			],
 			data: tableDatas,
 			language: {

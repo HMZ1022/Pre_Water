@@ -12,4 +12,8 @@
 		</if>  
 	</select>
 	
+	<select id="getMaxDateAndMinDateByCstId" parameterType="String" resultType="hashmap">
+		select "MAX"(MDI_TS) AS endDate, "MIN"(MDI_TS) AS beginDate FROM INTERVAL_D WHERE CST_ID=#{0}
+	</select>
+	
 </mapper>

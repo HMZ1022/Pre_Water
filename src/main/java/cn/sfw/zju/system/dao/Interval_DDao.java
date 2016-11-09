@@ -14,4 +14,6 @@ public interface Interval_DDao {
 	 */
 	public List<Map<String, Object>> getByCstIdAndTime(Map<String, Object> map);
 	
+	public Map<String, Object> getMaxDateAndMinDateByCstId(String cst_id);
+	
 }

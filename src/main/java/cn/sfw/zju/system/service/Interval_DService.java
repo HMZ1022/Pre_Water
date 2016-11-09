@@ -22,4 +22,8 @@ public class Interval_DService {
 		return dao.getByCstIdAndTime(map);
 	}
 
+	public Map<String, Object> getMaxDateAndMinDateByCstId(String cst_id){
+		return dao.getMaxDateAndMinDateByCstId(cst_id);
+	}
+	
 }
