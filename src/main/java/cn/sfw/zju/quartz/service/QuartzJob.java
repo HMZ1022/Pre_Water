@@ -37,6 +37,7 @@ public class QuartzJob implements Job {
 		System.out.println(time);
         Long t=DateUtil.convertTimeToLong(time);
 		dayDao.autoSave(t);
+		System.out.println("success");
 	}
 	
 }

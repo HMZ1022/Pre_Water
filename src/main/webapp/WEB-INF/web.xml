@@ -48,6 +48,13 @@
   	<listener-class>org.springframework.web.util.IntrospectorCleanupListener</listener-class>  
   </listener>
   
+  <!-- 定时任务 -->
+    <listener>    
+    	<listener-class> cn.sfw.zju.quartz.service.QuartzSchedulerListener </listener-class>
+	</listener>
+  
+  
+  
   <!-- Spring MVC Servlet -->
   <servlet>
     <servlet-name>rest</servlet-name>

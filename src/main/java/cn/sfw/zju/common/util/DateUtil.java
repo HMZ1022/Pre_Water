@@ -64,7 +64,7 @@ public class DateUtil {
 	
 	
 	public static void main(String args[]){
-		Long time= convertTimeToLong("2015-09-20 00:10:00");
+		Long time= convertTimeToLong("2016-11-20 00:00:00");
 		System.out.println(time);
 		System.out.println(convertLongToTime(time));
 		//1442678400000

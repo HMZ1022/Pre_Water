@@ -19,4 +19,9 @@
 		select * FROM INTERVAL_D WHERE CST_ID=#{cst_id} AND MDI_TS=#{mdi_ts}
 	</select>
 	
+	<update id="autoSave" statementType="CALLABLE" parameterType="long" >
+		<![CDATA[
+		    {call AUTOSAVE_DAY (#{t,mode=IN,jdbcType=BIGINT})}
+		]]>
+	</update>	
 </mapper>
