@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import cn.sfw.zju.system.dao.IntervalDao;
 import cn.sfw.zju.system.dao.Interval_DDao;
+import cn.sfw.zju.system.vo.Interval_D;
 
 @Service
 public class Interval_DService {
@@ -24,6 +25,10 @@ public class Interval_DService {
 
 	public Map<String, Object> getMaxDateAndMinDateByCstId(String cst_id){
 		return dao.getMaxDateAndMinDateByCstId(cst_id);
+	}
+	
+	public Interval_D getInterval_DByCstIdAndTs(Map<String, Object> map){
+		return dao.getInterval_DByCstIdAndTs(map);
 	}
 	
 }

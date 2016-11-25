@@ -36,6 +36,33 @@ public class DateUtil {
 	     return calendar.getTime();
 	}
 	
+	public static String month(String pTime){
+		return pTime.split("-")[1];
+	}
+	public static String day(String pTime){
+		return pTime.split("-")[2];
+	}
+	public static String week(String pTime){
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		Calendar c = Calendar.getInstance();
+		int dayForWeek = 0;
+		try {
+			c.setTime(format.parse(pTime));
+			if(c.get(Calendar.DAY_OF_WEEK) == 1){
+				dayForWeek = 7;
+			}else{
+				dayForWeek = c.get(Calendar.DAY_OF_WEEK) - 1;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}		
+		return String.valueOf(dayForWeek);
+	}
+	public static String is_holiday(String pTime){
+		return "0";
+	}
+	
+	
 	public static void main(String args[]){
 		Long time= convertTimeToLong("2015-09-20 00:10:00");
 		System.out.println(time);
@@ -53,6 +80,7 @@ public class DateUtil {
 			e.printStackTrace();
 		}
 		System.out.println(sdf1.format(c.getTime()));
+		System.out.println(week("2016-11-15"));
 	}
 	
 	

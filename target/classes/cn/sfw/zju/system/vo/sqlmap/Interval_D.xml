@@ -15,5 +15,8 @@
 	<select id="getMaxDateAndMinDateByCstId" parameterType="String" resultType="hashmap">
 		select "MAX"(MDI_TS) AS endDate, "MIN"(MDI_TS) AS beginDate FROM INTERVAL_D WHERE CST_ID=#{0}
 	</select>
+	<select id="getInterval_DByCstIdAndTs" parameterType="map" resultType="Interval_D">
+		select * FROM INTERVAL_D WHERE CST_ID=#{cst_id} AND MDI_TS=#{mdi_ts}
+	</select>
 	
 </mapper>

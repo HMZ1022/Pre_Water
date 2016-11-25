@@ -131,6 +131,18 @@
 	    <version>3.8.0</version>
 	</dependency>
 	
+	<!-- quartz -->
+	<dependency>
+		<groupId>org.quartz-scheduler</groupId>
+		<artifactId>quartz</artifactId>
+		<version>2.2.1</version>
+	</dependency>
+	<dependency>
+		<groupId>org.quartz-scheduler</groupId>
+		<artifactId>quartz-jobs</artifactId>
+		<version>2.2.1</version>
+	</dependency>
+	
 	<!-- 导入dbcp的jar包，用来在applicationContext.xml中配置数据库 -->
 	<dependency>
 		<groupId>commons-dbcp</groupId>

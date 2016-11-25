@@ -49,7 +49,7 @@ public class ModelEvaluationAction {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/modelEvalution/", method = RequestMethod.POST)
-	public Message getAllById(HttpServletRequest request,HttpServletResponse response,@RequestBody Map<String,Object> map) {
+	public Message modelEvalution(HttpServletRequest request,HttpServletResponse response,@RequestBody Map<String,Object> map) {
 		Message message = new Message();
 		
 		String cst_id =(String) map.get("cst_id");
@@ -92,7 +92,7 @@ public class ModelEvaluationAction {
 					String[] options ={"-M", "16", "-N"};
 					classifier=wekaUtils.getM5PClassifer(train, options);
 					cvParameterSelection.setClassifier(classifier);
-					//cvParameterSelection.addCVParameter("M 1 20 20");
+					//cvParameterSelection.addCVParameter("M 1 20 20");					
 					cvParameterSelection.setNumFolds(10);
 					cvParameterSelection.buildClassifier(train);
 					log.info("最优参数："+Utils.joinOptions(cvParameterSelection.getBestClassifierOptions()));

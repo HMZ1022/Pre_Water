@@ -107,7 +107,7 @@ div.content_box {
 							</div>
 							<div class="selectButton col-xs-3 form-group"><label for="timeInterval" class="control-label">时间间隔:</label>
 								<select id="timeInterval" class="form-control" style="width:200px;">
-									<option value="15" selected="selected">15分钟</option>
+									<option value="10" selected="selected">10分钟</option>
 									<option value="60">1小时</option>
 									<option value="1440">1天</option>
 								</select>
@@ -121,18 +121,18 @@ div.content_box {
 							</div>
 							<div class="col-xs-3"><label for="algorithm" class="control-label">预测算法</label>
 								<select id="algorithm" class="form-control" style="width:200px;">
-									<option value="term_total" selected="selected">BP</option>
-									<option value="city">搜索树</option>
-									<option value="education">因子</option>
+									<option value="bp" selected="selected">BP</option>
+									<option value="tree">搜索树</option>
+									<option value="smoreg">支持向量机回归</option>
 								</select>
 							</div>
 							<div class="col-xs-3">
 								<label class="control-label">开始日期：</label>
-								<input id="startDate" class="form-control" type="text" onClick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:false})"/>
+								<input id="startDate" class="form-control" type="text" onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowClear:false})"/>
 							</div>
 							<div class="col-xs-3">
 								<label class="control-label">结束日期：</label>
-								<input id="endDate" class="form-control" type="text" onClick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:false})"/>
+								<input id="endDate" class="form-control" type="text" onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',isShowClear:false})"/>
 							</div>
 							<div class="col-xs-3"><input id="dataFitting" class="btn btn-primary" type="button" value="查询" onclick="forcast()"/></div>
 						</div>
@@ -279,7 +279,7 @@ div.content_box {
 							</div>
 							<div class="selectButton col-xs-3 form-group"><label for="timeInterval" class="control-label">时间间隔:</label>
 								<select id="e_timeInterval" class="form-control" style="width:200px;">
-									<option value="0.25" selected="selected">15分钟</option>
+									<option value="0.25" selected="selected">10分钟</option>
 									<option value="1">1小时</option>
 									<option value="24">1天</option>
 								</select>
